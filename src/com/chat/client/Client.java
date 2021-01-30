@@ -1,43 +1,37 @@
 package com.chat.client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
-    public static void main(String[] args) throws IOException {
-        Scanner sc = new Scanner(System.in);
-        String reply;
-        String name = "empty";
-        Socket socket = new Socket("localhost", 2000);
-        BufferedReader cin = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter cout = new PrintWriter(socket.getOutputStream(), true);
+    public static void main(String[] args) {
+        try (Socket socket = new Socket("localhost", 5000)) {
+            PrintWriter cout = new PrintWriter(socket.getOutputStream(), true);
+            Scanner sc = new Scanner(System.in);
+            String reply;
+            String name = "empty";
 
-        ThreadClient threadClient = new ThreadClient(socket);
-        Thread thread = new Thread(threadClient);
-        thread.start();
+            ThreadClient threadClient = new ThreadClient(socket);
+            new Thread(threadClient).start();
+            do {
+                if (name.equals("empty")) {
+                    System.out.println("Enter your name : ");
+                    reply = sc.nextLine();
+                    name = reply;
+                    cout.println(reply);
+                } else {
+                    String message = (name + " : ");
+                    reply = sc.nextLine();
+                    cout.println(message + " " + reply);
+                }
 
-        do {
-            if (name.equals("empty")) {
-                System.out.println("Enter your name: ");
-                reply = sc.nextLine();
-                name = reply;
-                cout.println("Welcome to chat room " + reply);
-            } else {
-                String existingClientName = name + ": ";
-                System.out.println(existingClientName);
-                reply = sc.nextLine();
-                System.out.println(reply);
-                System.out.println(reply);
-                cout.println(existingClientName + reply);
-            }
-
-            if (reply.equals("stop")) {
-                break;
-            }
-        } while (reply.equals("stop"));
+                if (reply.equals("exit")) {
+                    break;
+                }
+            } while (!reply.equals("exit"));
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
+        }
     }
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Server {
     public static void main(String[] args) {
         ArrayList<ThreadServer> threads = new ArrayList<>();
-        try (ServerSocket serversocket = new ServerSocket(2000)) {
+        try (ServerSocket serversocket = new ServerSocket(5000)) {
             System.out.println("Server is started...");
             while (true) {
                 Socket socket = serversocket.accept();
@@ -17,7 +17,7 @@ public class Server {
                 //get all the list of currently running thread
             }
         } catch (Exception e) {
-            System.out.println("Error occurred in main: " + e.getStackTrace());
+            System.out.println(e.getStackTrace());
         }
     }
 }

@@ -8,7 +8,7 @@ import java.net.Socket;
 /**
  * Thread for clients
  */
-public class ThreadClient extends Thread {
+public class ThreadClient implements Runnable {
     private Socket socket;
     private BufferedReader cin;
 
