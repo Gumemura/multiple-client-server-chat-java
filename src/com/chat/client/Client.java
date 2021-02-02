@@ -19,11 +19,11 @@ public class Client {
                     System.out.println("Enter your name : ");
                     reply = sc.nextLine();
                     name = reply;
-                    cout.println(reply);
+                    cout.println(reply + " Joined Chat-room.");
                 } else {
                     String message = (name + " : ");
                     reply = sc.nextLine();
-                    cout.println(message + " " + reply);
+                    cout.println(message + reply);
                 }
 
                 if (reply.equals("exit")) {

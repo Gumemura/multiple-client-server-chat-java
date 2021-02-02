@@ -1,19 +1,19 @@
 package com.chat.server;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
 public class ThreadServer extends Thread {
     private Socket socket;
     private ArrayList<ThreadServer> threadList;
+    private ArrayList<Socket> clients;
     private PrintWriter output;
 
-    public ThreadServer(Socket socket, ArrayList<ThreadServer> threads) {
+    public ThreadServer(Socket socket, ArrayList<ThreadServer> threads, ArrayList<Socket> clients) {
         this.socket = socket;
         this.threadList = threads;
+        this.clients = clients;
     }
 
     @Override
@@ -27,18 +27,30 @@ public class ThreadServer extends Thread {
                 if (outputString.equals("exit")) {
                     break;
                 }
-                printToALlClients(outputString);
-                System.out.println("Server received " + outputString);
+                showMessageToAllClients(socket, outputString);
+                System.out.println(outputString);
             }
+        } catch (EOFException e) {
+            clients.remove(socket);
+            System.out.println("removed");
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
         }
     }
 
-    private void printToALlClients(String outputString) {
-        for (ThreadServer sT : threadList) {
-            sT.output.println(outputString);
+    private void showMessageToAllClients(Socket sender, String outputString) {
+        Socket s;
+        PrintWriter p;
+        for (int i = 0; i < clients.size(); i++) {
+            s = clients.get(i);
+            try {
+                if (s != sender) {
+                    p = new PrintWriter(s.getOutputStream(), true);
+                    p.println(outputString);
+                }
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
         }
-
     }
 }

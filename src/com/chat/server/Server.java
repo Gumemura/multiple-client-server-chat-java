@@ -7,11 +7,13 @@ import java.util.ArrayList;
 public class Server {
     public static void main(String[] args) {
         ArrayList<ThreadServer> threads = new ArrayList<>();
+        ArrayList<Socket> clients = new ArrayList<>();
         try (ServerSocket serversocket = new ServerSocket(5000)) {
             System.out.println("Server is started...");
             while (true) {
                 Socket socket = serversocket.accept();
-                ThreadServer ThreadServer = new ThreadServer(socket, threads);
+                clients.add(socket);
+                ThreadServer ThreadServer = new ThreadServer(socket, threads, clients);
                 threads.add(ThreadServer);
                 ThreadServer.start();
                 //get all the list of currently running thread
