@@ -6,13 +6,11 @@ import java.util.ArrayList;
 
 public class ThreadServer extends Thread {
     private Socket socket;
-    private ArrayList<ThreadServer> threadList;
     private ArrayList<Socket> clients;
     private PrintWriter output;
 
-    public ThreadServer(Socket socket, ArrayList<ThreadServer> threads, ArrayList<Socket> clients) {
+    public ThreadServer(Socket socket, ArrayList<Socket> clients) {
         this.socket = socket;
-        this.threadList = threads;
         this.clients = clients;
     }
 
@@ -24,7 +22,7 @@ public class ThreadServer extends Thread {
 
             while (true) {
                 String outputString = input.readLine();
-                if (outputString.equals("exit")) {
+                if (outputString.equals("logout")) {
                     break;
                 }
                 showMessageToAllClients(socket, outputString);
@@ -32,21 +30,22 @@ public class ThreadServer extends Thread {
             }
         } catch (EOFException e) {
             clients.remove(socket);
-            System.out.println("removed");
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
         }
     }
 
     private void showMessageToAllClients(Socket sender, String outputString) {
-        Socket s;
-        PrintWriter p;
-        for (int i = 0; i < clients.size(); i++) {
-            s = clients.get(i);
+        Socket socket;
+        PrintWriter printWriter;
+        int i = 0;
+        while (i < clients.size()) {
+            socket = clients.get(i);
+            i++;
             try {
-                if (s != sender) {
-                    p = new PrintWriter(s.getOutputStream(), true);
-                    p.println(outputString);
+                if (socket != sender) {
+                    printWriter = new PrintWriter(socket.getOutputStream(), true);
+                    printWriter.println(outputString);
                 }
             } catch (IOException ex) {
                 System.out.println(ex);
