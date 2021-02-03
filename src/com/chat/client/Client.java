@@ -6,31 +6,27 @@ import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
+        String name = "empty";
+        String reply = "empty";
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter your name : ");
+        reply = sc.nextLine();
+        name = reply;
+
         try (Socket socket = new Socket("localhost", 5000)) {
             PrintWriter cout = new PrintWriter(socket.getOutputStream(), true);
-            Scanner sc = new Scanner(System.in);
-            String reply;
-            String name = "empty";
 
             ThreadClient threadClient = new ThreadClient(socket);
-            new Thread(threadClient).start();
+            new Thread(threadClient).start(); // start thread to receive message
+
+            cout.println(reply + " has joined chat-room.");
             do {
-                if (name.equals("empty")) {
-                    System.out.println("Enter your name : ");
-                    reply = sc.nextLine();
-                    name = reply;
-                    if (reply.equals("logout")) {
-                        break;
-                    }
-                    cout.println(reply + " has joined chat-room.");
-                } else {
-                    String message = (name + " : ");
-                    reply = sc.nextLine();
-                    if (reply.equals("logout")) {
-                        break;
-                    }
-                    cout.println(message + reply);
+                String message = (name + " : ");
+                reply = sc.nextLine();
+                if (reply.equals("logout")) {
+                    break;
                 }
+                cout.println(message + reply);
             } while (!reply.equals("logout"));
         } catch (Exception e) {
             System.out.println(e.getStackTrace());

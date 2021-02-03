@@ -2,6 +2,7 @@ package com.chat.server;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 public class ThreadServer extends Thread {
@@ -28,7 +29,7 @@ public class ThreadServer extends Thread {
                 showMessageToAllClients(socket, outputString);
                 System.out.println(outputString);
             }
-        } catch (EOFException e) {
+        } catch (SocketException e) {
             clients.remove(socket);
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
