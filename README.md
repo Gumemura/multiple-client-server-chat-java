@@ -12,22 +12,22 @@ Implement chat room in java
 
 ### Screenshot (If you are not able to see screen shots than click on _Img_ or open *img* directory in project)
 
-- Server [Img](https://github.com/jaynilsavani/multiple-client-server-chat-java/blob/master/img/Server.PNG)
+- Server
 
  ![alt text](https://github.com/jaynilsavani/multiple-client-server-chat-java/blob/master/img/Server.PNG?raw=true)
  
- - Client 1 [Img](https://github.com/jaynilsavani/multiple-client-server-chat-java/blob/master/img/Client%201.PNG)
+ - Client 1
 
  ![alt text](https://github.com/jaynilsavani/multiple-client-server-chat-java/blob/master/img/Client%201.PNG?raw=true)
  
- - Client 2 [Img](https://github.com/jaynilsavani/multiple-client-server-chat-java/blob/master/img/Client%202.PNG)
+ - Client 2
 
  ![alt text](https://github.com/jaynilsavani/multiple-client-server-chat-java/blob/master/img/Client%202.PNG?raw=true)
  
- - Client 3 [Img](https://github.com/jaynilsavani/multiple-client-server-chat-java/blob/master/img/Client%203.PNG)
+ - Client 3
 
  ![alt text](https://github.com/jaynilsavani/multiple-client-server-chat-java/blob/master/img/Client%203.PNG?raw=true)
  
- - Client 4 [Img](https://github.com/jaynilsavani/multiple-client-server-chat-java/blob/master/img/Client%204.PNG)
+ - Client 4
 
  ![alt text](https://github.com/jaynilsavani/multiple-client-server-chat-java/blob/master/img/Client%204.PNG?raw=true)
