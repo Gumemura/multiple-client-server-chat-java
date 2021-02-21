@@ -1,16 +1,14 @@
 # Multiple-client-server-chat-java
 
-Implement chat room in java
+Chat room in java with socket programming.
 
 ### Steps
 
 - Start server by running server.java file
-- For IntelliJ IDE, follow below steps to run java file multiple times : 
-   - Run->Edit Configurations->select client class(on left side)->click on 'Modify Options'->choose 'Allow Multiple instances'->Apply changes 
 - Add multiple clients in chat room by running client.java file multiple times
 - Now, you are good to go !
 
-### Screenshot (If you are not able to see screen shots than click on _Img_ or open *img* directory in project)
+### Screenshot
 
 - Server
 
