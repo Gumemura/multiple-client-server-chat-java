@@ -58,6 +58,7 @@ public class Servidor extends Thread {
 
 			while (!"/sair".equalsIgnoreCase(msg) && msg != null) {
 				msg = bfr.readLine();
+				
 				sendToAll(bfw, msg);
 				System.out.println(msg);
 			}

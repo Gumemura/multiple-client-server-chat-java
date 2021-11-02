@@ -35,6 +35,9 @@ public class Cliente extends JFrame implements ActionListener, KeyListener {
 	private JTextField txtNome;
 	private LocalDateTime agora;
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+	private boolean comparando = false;
+	private String resposta;
+	private int pontos = 0;
 
 	public Cliente() throws IOException {
 		JLabel lblMessage = new JLabel("Entrar no Chat Anagrama");
@@ -44,7 +47,7 @@ public class Cliente extends JFrame implements ActionListener, KeyListener {
 		Object[] texts = { lblMessage, txtIP, txtPorta, txtNome };
 		JOptionPane.showMessageDialog(null, texts);
 		pnlContent = new JPanel();
-		texto = new JTextArea(20, 20);
+		texto = new JTextArea(20, 50);
 		texto.setEditable(false);
 		texto.setBackground(new Color(240, 240, 240));
 		txtMsg = new JTextField(20);
@@ -64,8 +67,9 @@ public class Cliente extends JFrame implements ActionListener, KeyListener {
 		pnlContent.add(scroll);
 		pnlContent.add(lblMsg);
 		pnlContent.add(txtMsg);
-		pnlContent.add(btnSair);
 		pnlContent.add(btnSend);
+		pnlContent.add(btnSair);
+		
 		pnlContent.setBackground(Color.LIGHT_GRAY);
 		texto.setBorder(BorderFactory.createEtchedBorder(Color.BLUE, Color.BLUE));
 		txtMsg.setBorder(BorderFactory.createEtchedBorder(Color.BLUE, Color.BLUE));
@@ -73,7 +77,7 @@ public class Cliente extends JFrame implements ActionListener, KeyListener {
 		setContentPane(pnlContent);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		setSize(400, 600);
+		setSize(700, 500);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -108,23 +112,45 @@ public class Cliente extends JFrame implements ActionListener, KeyListener {
 	public void enviarMensagem(String msg) throws IOException {
 		agora = LocalDateTime.now();
 		String horario = agora.format(formatter);
-		if (msg.toLowerCase().equals("/sair")) {
-			bfw.write(" Desconectado \r\n");
-			texto.append("[" + horario + " " + txtNome.getText() + "] - Desconectado \r\n");
-		} else if (msg.toLowerCase().equals("/anagrama")) {
+		if (comparando == false) {
 
-		} else if (msg.toLowerCase().equals("/pontos")) {
+			if (msg.toLowerCase().equals("/sair")) {
+				bfw.write(" Desconectado \r\n");
+				texto.append("[" + horario + " " + txtNome.getText() + "] - Desconectado \r\n");
+			} else if (msg.toLowerCase().equals("/anagrama")) {
+				Anagrama anagrama = new Anagrama();
+				comparando = anagrama.getComparar();
+				resposta = anagrama.getPalavra();
+				texto.append("[" + horario + " Anagrama]: " + anagrama.getAnagrama() + " \r\n");
+				bfw.write("[" + horario + " Anagrama]: " + anagrama.getAnagrama() + " \r\n");
+			} else if (msg.toLowerCase().equals("/pontos")) {
+				texto.append("[" + horario + " Pontos]: Voce tem " + pontos + " pontos\r\n");
+				bfw.write(txtNome.getText() + " tem " + pontos + " pontos \r\n");
+			} else if (msg.toLowerCase().equals("/ajuda")) {
+				texto.append("Lista de Comandos: \n - Ajuda: /ajuda\n - Pontos: /pontos\n - Anagrama: /anagrama \r\n");
+			} else if (msg.toLowerCase().equals("se conectou")) {
+				bfw.write(msg + " \r\n");
+			} else {
+				bfw.write(msg + " \r\n");
+				texto.append("[" + horario + " " + txtNome.getText() + "]: " + txtMsg.getText() + "\r\n");
+			}
 
-		} else if (msg.toLowerCase().equals("/ajuda")) {
-			texto.append("Lista de Comandos: \n - Ajuda: /ajuda\n - Pontos: /pontos\n - Anagrama: /anagrama \r\n");
-		} else if (msg.toLowerCase().equals("se conectou")) {
-			bfw.write(msg + " \r\n");
 		} else {
-			bfw.write(msg + " \r\n");
-			texto.append("[" + horario + " " + txtNome.getText() + "]: " + txtMsg.getText() + "\r\n");
+			if (resposta.equalsIgnoreCase(msg)) {
+				comparando = false;
+				pontos++;
+				texto.append("[" + horario + " Resposta]: Voce acertou! Resposta era " + resposta + "\r\n");
+				bfw.write(txtNome.getText() + " acertou, a reposta era " + resposta + " \r\n");
+			} else if (msg.toLowerCase().equals("/desistir")) {
+				comparando = false;
+				texto.append("[" + horario + " Resposta]: Voce desistiu, resposta era" + resposta + "\r\n");
+				bfw.write(txtNome.getText() + "desistiu, a reposta era " + resposta + " \r\n");
+			}
+
 		}
 		bfw.flush();
 		txtMsg.setText("");
+
 	}
 
 	/**
@@ -186,11 +212,15 @@ public class Cliente extends JFrame implements ActionListener, KeyListener {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-		}
-
-		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+		} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			try {
 				sair();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		} else if (e.getKeyCode() == KeyEvent.VK_F2) {
+			try {
+				enviarMensagem("/anagrama");
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
