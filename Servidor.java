@@ -11,6 +11,8 @@ import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+//UI
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -54,7 +56,7 @@ public class Servidor extends Thread {
 			clientes.add(bfw);
 			nome = msg = bfr.readLine();
 
-			while (!"Sair".equalsIgnoreCase(msg) && msg != null) {
+			while (!"/sair".equalsIgnoreCase(msg) && msg != null) {
 				msg = bfr.readLine();
 				sendToAll(bfw, msg);
 				System.out.println(msg);
