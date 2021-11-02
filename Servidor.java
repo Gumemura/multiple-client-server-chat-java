@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -8,7 +9,10 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Random;
 
 //UI
 import javax.swing.JLabel;
@@ -22,7 +26,9 @@ public class Servidor extends Thread {
 	private Socket con;
 	private InputStream in;
 	private InputStreamReader inr;
-	private BufferedReader bfr;
+	private BufferedReader bfr
+;	private static String anagramaDisplay;
+	private static List<String> anagramaGabarito;
 
 	/*
 	*
@@ -39,6 +45,61 @@ public class Servidor extends Thread {
 	        e.printStackTrace();
 	   }
 	}
+
+	public static String swap(String a, int i, int j) 
+    { 
+        char temp; 
+        char[] charArray = a.toCharArray(); 
+        temp = charArray[i]; 
+        charArray[i] = charArray[j]; 
+        charArray[j] = temp; 
+        return String.valueOf(charArray); 
+    } 
+
+	private static void geraAnagrama(String str, int start, int end) 
+    { 
+        if (start != end) {
+            for (int i = start; i <= end; i++) { 
+                str = swap(str, start, i); 
+                geraAnagrama(str, start + 1, end); 
+                str = swap(str, start, i); 
+            } 
+        }
+
+        if (!anagramaGabarito.contains(str)){
+        	anagramaDisplay = str;
+        }
+    }
+
+	public static void escolheAnagrama() throws IOException
+	{
+		BufferedReader depositoAnagramas = new BufferedReader(new FileReader("anagramas.txt"));
+		try {
+			int txtLimit = 0;
+			String line = depositoAnagramas.readLine();;
+
+		    while (line != null) {
+		    	txtLimit++;
+		    	line = depositoAnagramas.readLine();
+		    }
+
+		    depositoAnagramas.close();
+		    depositoAnagramas = new BufferedReader(new FileReader("anagramas.txt"));
+
+			Random rand = new Random();
+			int anagramaEscolhido = rand.nextInt(txtLimit) + 1; 
+			for (int i = 0; i < anagramaEscolhido; i++) {
+				line = depositoAnagramas.readLine();
+		    }
+
+		    anagramaGabarito = Arrays.asList(line.split(" "));
+		    String primeiraPalavra = anagramaGabarito.get(0);
+		    geraAnagrama(primeiraPalavra, 0, primeiraPalavra.length() - 1);
+		}finally {
+			depositoAnagramas.close();
+		}
+	}
+
 	/**
 	  * Método run
 	  */
@@ -48,6 +109,11 @@ public class Servidor extends Thread {
 		    OutputStream ou =  this.con.getOutputStream();
 		    Writer ouw = new OutputStreamWriter(ou);
 		    BufferedWriter bfw = new BufferedWriter(ouw);
+
+		    bfw.write("OI\n");
+			sendToAll(bfw, bfr.readLine());
+			bfw.flush();
+
 		    clientes.add(bfw);
 		    nome = msg = bfr.readLine();
 
@@ -69,6 +135,7 @@ public class Servidor extends Thread {
 	 * @param msg do tipo String
 	 * @throws IOException
 	 */
+
 	public void sendToAll(BufferedWriter bwSaida, String msg) throws  IOException
 	{
 		BufferedWriter bwS;
@@ -88,6 +155,7 @@ public class Servidor extends Thread {
 	*/
 	public static void main(String []args) {
 	  	try{
+			escolheAnagrama();
 		    //Cria os objetos necessário para instânciar o servidor
 		    JLabel lblMessage = new JLabel("Porta do Servidor:");
 		    JTextField txtPorta = new JTextField("12345");
