@@ -1,8 +1,5 @@
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -20,6 +17,8 @@ public class Cliente extends JFrame implements ActionListener, KeyListener {
 	private JTextField txtMsg;
 	private JButton btnSend;
 	private JButton btnSair;
+	private JPanel anagramaPanel;
+	private JLabel anagramaText;
 	private JLabel lblHistorico;
 	private JLabel lblMsg;
 	private JPanel pnlContent;
@@ -43,6 +42,11 @@ public class Cliente extends JFrame implements ActionListener, KeyListener {
 		texto.setEditable(false);
 		texto.setBackground(new Color(240,240,240));
 		txtMsg = new JTextField(20);
+		anagramaPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 250, 10));
+		anagramaPanel.setBackground(Color.LIGHT_GRAY);
+		anagramaText = new JLabel("OARM");
+		anagramaText.setFont(new Font("Arial", Font.PLAIN, 20));
+		anagramaPanel.add(anagramaText);
 		lblHistorico = new JLabel("Histórico");
 		lblMsg = new JLabel("Mensagem");
 		btnSend = new JButton("Enviar");
@@ -55,6 +59,7 @@ public class Cliente extends JFrame implements ActionListener, KeyListener {
 		txtMsg.addKeyListener(this);
 		JScrollPane scroll = new JScrollPane(texto);
 		texto.setLineWrap(true);
+		pnlContent.add(anagramaPanel);
 		pnlContent.add(lblHistorico);
 		pnlContent.add(scroll);
 		pnlContent.add(lblMsg);
@@ -67,8 +72,8 @@ public class Cliente extends JFrame implements ActionListener, KeyListener {
 		setTitle(txtNome.getText());
 		setContentPane(pnlContent);
 		setLocationRelativeTo(null);
-		setResizable(true);
-		setSize(250, 320);
+		setResizable(false);
+		setSize(250, 360);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}

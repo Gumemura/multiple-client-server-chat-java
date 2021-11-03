@@ -109,16 +109,15 @@ public class Servidor extends Thread {
 		    OutputStream ou =  this.con.getOutputStream();
 		    Writer ouw = new OutputStreamWriter(ou);
 		    BufferedWriter bfw = new BufferedWriter(ouw);
-
-		    bfw.write("OI\n");
-			sendToAll(bfw, bfr.readLine());
-			bfw.flush();
-
+		    
 		    clientes.add(bfw);
 		    nome = msg = bfr.readLine();
 
 		    while(!"Sair".equalsIgnoreCase(msg) && msg != null)
 		    {
+		    	if(anagramaGabarito.contains(msg)){
+					System.out.println("SUCESSO");
+		    	}
 		    	msg = bfr.readLine();
 				sendToAll(bfw, msg);
 				System.out.println(msg);
